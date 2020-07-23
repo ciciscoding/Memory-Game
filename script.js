@@ -111,7 +111,7 @@ function handleCardClick(event) {
           previousCard.classList.remove('flipped');
           previousCard = null;
           isProcessing = false;
-        }, 100);
+        }, 1000);
         restart();
       } else {
         previousCard = null;
