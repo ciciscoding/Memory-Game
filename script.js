@@ -1,5 +1,10 @@
 const gameContainer = document.getElementById("game");
+let blank = 'white';
+let firstCard = '';
+let secondCard = '';
+let flippedCard = 0;
 let previousCard = null;
+let selectedCards = [];
 
 const COLORS = [
   "red",
@@ -49,85 +54,71 @@ function createDivsForColors(colorArray) {
 
     // give it a class attribute for the value we are looping over
     newDiv.classList.add(color);
-
+    newDiv.setAttribute('processing', 'false');
     // call a function handleCardClick when a div is clicked on
     newDiv.addEventListener("click", handleCardClick);
+    
     
     // append the div to the element with an id of game
     gameContainer.append(newDiv);
   }
 }
 
-// TODO: Implement this function!
+const match = function() {
+  let selectedCard = document.querySelectorAll('.flipped');
+  for(let card of selectedCard) {
+    card.classList.remove('flipped');
+    card.style.backgroundColor = 'gray';
+  }
+};
+console.log(match, 'match');
+
+const reset = function() {
+  let selectedCard = document.querySelectorAll('.flipped');
+  for(let card of selectedCard) {
+    card.classList.remove('flipped');
+    card.style.backgroundColor = blank;
+  }
+
+  firstCard = '';
+  secondCard = '';
+  flippedCard = 0;
+  selectedCards = [];
+};
+
 function handleCardClick(event) {
-  // you can use event.target to see which element was clicked
-  let theTarget = event.target.className;
-  const red = document.querySelectorAll('div .red');
-  const orange = document.querySelectorAll('div .orange');
-  const green = document.querySelectorAll('div .green');
-  const blue = document.querySelectorAll('div .blue');
-  const purple = document.querySelectorAll('div .purple');
-  
-  function clickedCard(selectedCard) {
-    if(isProcessing) { return; }
+    // you can use event.target to see which element was clicked
+  let selected = event.target;
+
+  if(previousCard === selected || selected.classList.contains('flipped')) {
+    return;
   }
 
-  if(theTarget == red[0].className) {
-    document.body.style.backgroundColor = 'red'
-  }
-  else if(theTarget == orange[0].className) {
-    document.body.style.backgroundColor = 'orange'
-  }
-  else if(theTarget == green[0].className) {
-    document.body.style.backgroundColor = 'green'
-  }
-  else if(theTarget == blue[0].className) {
-    document.body.style.backgroundColor = 'blue'
-  }
-  else if(theTarget == purple[0].className) {
-    document.body.style.backgroundColor = 'purple'
-  };
-  // console.log(event.target);
-
-
-  function clickedCard(selectedCard) {
-    if(selectedCard.classList.contains('flipped')) {
-      return;
-    }
-    
-    selectedCard.classList.add('flipped');
-    
-    if(previousCard === null) {
-      previousCard = selectedCard
-      // console.log(previousCard)
+  if(flippedCard < 2){
+    flippedCard += 1;
+    if(flippedCard === 1) {
+      firstCard = selected.className;
+      selected.style.backgroundColor = selected.classList[0];
+      selected.classList.add('flipped');
     } else {
-      let card1 = previousCard.className;
-      let card2 = selectedCard.className;
-
-      if(card1 !== card2){
-        isProcessing = true;
-        setTimeout(function () {
-          selectedCard.classList.remove('flipped');
-          previousCard.classList.remove('flipped');
-          previousCard = null;
-          isProcessing = false;
-        }, 1000);
-        restart();
+      secondCard = selected.className;
+      selected.style.backgroundColor = selected.classList[0];
+      selected.classList.add('flipped');
+    }
+    if(firstCard !== '' && secondCard !== '') {
+      if(firstCard === secondCard) {
+        setTimeout(match, 1000);
+        setTimeout(reset, 1000);
       } else {
-        previousCard = null;
-        console.log('You Win!');
+        setTimeout(reset, 500);
       }
     }
+      previousCard = selected;
+      selectedCards.push(previousCard);
   }
-  
-  clickedCard(event.target);
+};
 
-}
-
-function restart() {
-  document.body.style.backgroundColor = 'white';
-}
+// TODO: Implement this function!
 
 // when the DOM loads
 createDivsForColors(shuffledColors);
-
