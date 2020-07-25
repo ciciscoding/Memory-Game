@@ -21,7 +21,7 @@ const COLORS = [
 
 // here is a helper function to shuffle an array
 // it returns the same array with values shuffled
-// it is based on an algorithm called Fisher Yates if you want ot research more
+// it is based on an algorithm called Fisher Yates if you want to research more
 function shuffle(array) {
   let counter = array.length;
 
@@ -54,10 +54,9 @@ function createDivsForColors(colorArray) {
 
     // give it a class attribute for the value we are looping over
     newDiv.classList.add(color);
-    newDiv.setAttribute('processing', 'false');
+
     // call a function handleCardClick when a div is clicked on
     newDiv.addEventListener("click", handleCardClick);
-    
     
     // append the div to the element with an id of game
     gameContainer.append(newDiv);
@@ -71,7 +70,6 @@ const match = function() {
     card.style.backgroundColor = 'gray';
   }
 };
-console.log(match, 'match');
 
 const reset = function() {
   let selectedCard = document.querySelectorAll('.flipped');
